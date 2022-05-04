@@ -22,7 +22,7 @@ function init() {
       case '["' + options[3] + '"]':
         return addDepartment();
       case '["' + options[4] + '"]':
-        return console.log(answer);
+        return addRole();
       case '["' + options[5] + '"]':
         return console.log(answer);
       case '["' + options[6] + '"]':
@@ -90,6 +90,40 @@ function addDepartment() {
         function (err, results, fields) {
           departments.push(response);
           console.log(departments);
+          return init();
+        }
+      );
+    });
+}
+
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "role",
+        message: "Name your new role.",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary?",
+      },
+      {
+        type: "list",
+        name: "department",
+        message: "What department does it belong to?",
+        choices: departments,
+      },
+    ])
+    .then((response) => {
+      db.query(
+        `INSERT INTO role (title, salary, department_id)
+    VALUES (?, ?, ?)`,
+        JSON.stringify(Object.values(response)),
+        function (err, results, fields) {
+          roles.push(response.role);
+          console.log(roles);
           return init();
         }
       );
