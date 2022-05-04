@@ -1,4 +1,35 @@
 const mysql = require("mysql2");
+const inquirer = require("inquirer");
+const { options, departments, roles, employees } = require("./inputs");
+
+const initialQuestion = {
+  type: "list",
+  name: "initialPrompt",
+  message: "What would you like to do?",
+  choices: options,
+};
+
+function init() {
+  inquirer.prompt(initialQuestion).then((response) => {
+    const answer = response;
+    switch (JSON.stringify(Object.values(answer))) {
+      case '["' + options[0] + '"]':
+        return displayDepartment();
+      case '["' + options[1] + '"]':
+        return displayRole();
+      case '["' + options[2] + '"]':
+        return displayEmployee();
+      case '["' + options[3] + '"]':
+        return addDepartment();
+      case '["' + options[4] + '"]':
+        return console.log(answer);
+      case '["' + options[5] + '"]':
+        return console.log(answer);
+      case '["' + options[6] + '"]':
+        return console.log(answer);
+    }
+  });
+}
 
 // Connect to database
 const db = mysql.createConnection({
@@ -11,6 +42,7 @@ const db = mysql.createConnection({
 function displayDepartment() {
   db.query(`SELECT * FROM department`, function (err, results, fields) {
     console.table(results);
+    return init();
   });
 }
 
@@ -22,6 +54,7 @@ ON role.department_id = department.id
 ORDER BY role.id`,
     function (err, results, fields) {
       console.table(results);
+      return init();
     }
   );
 }
@@ -35,8 +68,31 @@ INNER JOIN department ON department.id = role.department_id
 ORDER BY employee.id`,
     function (err, results, fields) {
       console.table(results);
+      return init();
     }
   );
 }
 
-module.exports = { displayDepartment, displayRole, displayEmployee };
+function addDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "department",
+        message: "Name your new department.",
+      },
+    ])
+    .then((response) => {
+      departments.push(response);
+      console.log(departments);
+      return init();
+    });
+}
+
+module.exports = {
+  init,
+  displayDepartment,
+  displayRole,
+  displayEmployee,
+  addDepartment,
+};
