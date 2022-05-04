@@ -3,10 +3,8 @@ const inquirer = require("inquirer");
 const cTable = require("console.table");
 
 const { options, departments, roles, employees } = require("./js/inputs");
-const { displayDepartment } = require("./js/functions");
+const { displayDepartment, displayRole } = require("./js/functions");
 // const { listenerCount } = require("mysql2/typings/mysql/lib/Connection");
-
-
 
 const initialQuestion = {
   type: "list",
@@ -21,7 +19,7 @@ inquirer.prompt(initialQuestion).then((response) => {
     case '["' + options[0] + '"]':
       return displayDepartment();
     case '["' + options[1] + '"]':
-      return console.log(answer);
+      return displayRole();
     case '["' + options[2] + '"]':
       return console.log(answer);
     case '["' + options[3] + '"]':

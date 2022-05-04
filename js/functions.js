@@ -14,4 +14,16 @@ function displayDepartment() {
   });
 }
 
-module.exports = { displayDepartment };
+function displayRole() {
+  db.query(
+    `SELECT role.id, role.title, department.name AS department, role.salary
+FROM role JOIN department
+ON role.department_id = department.id
+ORDER BY role.id`,
+    function (err, results, fields) {
+      console.table(results);
+    }
+  );
+}
+
+module.exports = { displayDepartment, displayRole };
