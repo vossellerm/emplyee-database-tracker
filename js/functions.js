@@ -83,16 +83,19 @@ function addDepartment() {
       },
     ])
     .then((response) => {
-      departments.push(response);
-      console.log(departments);
-      return init();
+      db.query(
+        `INSERT INTO department (name)
+    VALUES (?)`,
+        JSON.stringify(Object.values(response)),
+        function (err, results, fields) {
+          departments.push(response);
+          console.log(departments);
+          return init();
+        }
+      );
     });
 }
 
 module.exports = {
   init,
-  displayDepartment,
-  displayRole,
-  displayEmployee,
-  addDepartment,
 };
